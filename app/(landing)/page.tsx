@@ -22,8 +22,8 @@ const page = () => {
       <div className="flex flex-col">
         {/* Header */}
 
-        <Spotlight />
         <div className="relative overflow-hidden pt-28">
+          <Spotlight />
           <div
             className="max-w-6xl mx-auto flex flex-col
          items-center justify-center gap-8
