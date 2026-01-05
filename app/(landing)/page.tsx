@@ -5,22 +5,22 @@ import { Libre_Baskerville, Cormorant } from "next/font/google";
 import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion";
 import { suggestions } from "@/lib/constants/suggestions";
 import { Spotlight } from "@/components/ui/spotlight-new";
+import Header from "@/components/common/header";
+import { ThemeToggler } from "@/components/common/theme-toggler";
 
 export const libreBaskerville = Libre_Baskerville({
   subsets: ["latin"],
-  weight: ["400", "400"], // Specify available weights
-  display: "swap",
+  weight: ["400", "400"],
 });
 
 const page = () => {
   const [promptText, setPromptText] = useState("");
-
   const handleSuggestionClick = (value: string) => {};
 
   return (
     <div className="w-full min-h-screen">
       <div className="flex flex-col">
-        {/* Header */}
+        <Header />
 
         <div className="relative overflow-hidden pt-28">
           <Spotlight />
@@ -120,5 +120,11 @@ const page = () => {
     </div>
   );
 };
+
+// const page = () => {
+//   return <div>landing page
+//     <ThemeToggler />
+//   </div>
+// }
 
 export default page;
