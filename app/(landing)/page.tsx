@@ -1,12 +1,16 @@
 "use client";
 import AIPromptInput from "@/components/ai/ai-prompt-input";
 import React, { useState } from "react";
-import { Libre_Baskerville, Cormorant } from "next/font/google";
+import { Libre_Baskerville } from "next/font/google";
 import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion";
 import { suggestions } from "@/lib/constants/suggestions";
 import { Spotlight } from "@/components/ui/spotlight-new";
 import Header from "@/components/common/header";
-import { ThemeToggler } from "@/components/common/theme-toggler";
+import { useCreateProject, useGetProjects } from "@/hooks/project/use-project";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { Spinner } from "@/components/ui/spinner";
+import { ProjectType } from "@/lib/types/t.project";
+import ProjectCard from "./_components/project-card";
 
 export const libreBaskerville = Libre_Baskerville({
   subsets: ["latin"],
@@ -14,8 +18,21 @@ export const libreBaskerville = Libre_Baskerville({
 });
 
 const page = () => {
+  const { user } = useKindeBrowserClient();
   const [promptText, setPromptText] = useState("");
-  const handleSuggestionClick = (value: string) => {};
+
+  const { mutate, isPending } = useCreateProject();
+  const { data: projects, isLoading, isError, error } = useGetProjects(user?.id);
+
+  console.log('Data', projects, error);
+  
+  const handleSuggestionClick = (value: string) => {
+    setPromptText(value);
+  };
+  const handleSubmit = () => {
+    if (!promptText) return;
+    mutate(promptText);
+  };
 
   return (
     <div className="w-full min-h-screen">
@@ -56,8 +73,8 @@ const page = () => {
                   className="ring-2 ring-primary rounded-3xl"
                   promptText={promptText}
                   setPromptText={setPromptText}
-                  isLoading={false}
-                  onSubmit={() => {}}
+                  isLoading={isPending}
+                  onSubmit={handleSubmit}
                 />
               </div>
 
@@ -105,26 +122,44 @@ const page = () => {
 
         <div className="w-full py-10">
           <div className="mx-auto max-w-3xl">
-            <div>
-              <h1
-                className="font-medium text-xl
+            {user?.id && (
+              <div>
+                <h1
+                  className="font-medium text-xl
               tracking-tight
               "
-              >
-                Recent Projects
-              </h1>
-            </div>
+                >
+                  Recent Projects
+                </h1>
+
+                {isLoading ? (
+                  <div
+                    className="flex items-center
+                  justify-center py-2
+                  "
+                  >
+                    <Spinner className="size-10" />
+                  </div>
+                ) : (
+                  <div
+                    className="grid grid-cols-1 sm:grid-cols-2
+                  md:grid-cols-3 gap-3 mt-3
+                    "
+                  >
+                    {projects?.map((project: ProjectType) => (
+                      <ProjectCard key={project.id} project={project} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {isError && <p className="text-red-500">Failed to load projects</p>}
           </div>
         </div>
       </div>
     </div>
   );
 };
-
-// const page = () => {
-//   return <div>landing page
-//     <ThemeToggler />
-//   </div>
-// }
 
 export default page;

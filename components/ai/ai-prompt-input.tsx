@@ -37,6 +37,7 @@ const AIPromptInput = ({
         <InputGroupTextarea
           className="text-base! py-2.5! outline-none!"
           placeholder="I want to design a ui that ..."
+          value={promptText}
           onChange={(e) => {
             setPromptText(e.target.value);
           }}
