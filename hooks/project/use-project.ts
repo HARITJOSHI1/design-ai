@@ -31,3 +31,12 @@ export const useGetProjects = (userId?: string) => {
     enabled: !!userId,
   });
 };
+
+export const useGetProjectWithId = (userId: string, id: string) => {
+  return useQuery({
+    queryKey: ["project", id, userId],
+    queryFn: async () => (await axios.get(`/api/project/${id}`)).data.data,
+
+    enabled: !!userId,
+  });
+};

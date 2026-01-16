@@ -22,10 +22,13 @@ const page = () => {
   const [promptText, setPromptText] = useState("");
 
   const { mutate, isPending } = useCreateProject();
-  const { data: projects, isLoading, isError, error } = useGetProjects(user?.id);
+  const {
+    data: projects,
+    isLoading,
+    isError,
+    error,
+  } = useGetProjects(user?.id);
 
-  console.log('Data', projects, error);
-  
   const handleSuggestionClick = (value: string) => {
     setPromptText(value);
   };
@@ -36,11 +39,11 @@ const page = () => {
 
   return (
     <div className="w-full min-h-screen">
+      <Spotlight />
       <div className="flex flex-col">
         <Header />
 
         <div className="relative overflow-hidden pt-28">
-          <Spotlight />
           <div
             className="max-w-6xl mx-auto flex flex-col
          items-center justify-center gap-8
