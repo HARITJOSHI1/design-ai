@@ -32,11 +32,11 @@ export const useGetProjects = (userId?: string) => {
   });
 };
 
-export const useGetProjectWithId = (userId: string, id: string) => {
+export const useGetProjectWithId = (id: string) => {
   return useQuery({
-    queryKey: ["project", id, userId],
+    queryKey: ["project", id],
     queryFn: async () => (await axios.get(`/api/project/${id}`)).data.data,
 
-    enabled: !!userId,
+    enabled: !!id,
   });
 };

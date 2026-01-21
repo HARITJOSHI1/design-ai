@@ -13,7 +13,7 @@ export async function generateProjectName(prompt: string) {
         - Capitalize words appropriately.
         - Do not include special characters.
       `,
-      prompt: prompt,
+      prompt,
     });
     return text?.trim() || "Untitled Project";
   } catch (error) {

@@ -12,8 +12,7 @@ const Page = () => {
   const { user } = useKindeBrowserClient();
   const id = params.pid as string;
 
-  const { data: project, isPending } = useGetProjectWithId(user?.id || "", id);
-  if (!user) return <div>Unauthorized</div>;
+  const { data: project, isPending } = useGetProjectWithId(id);
 
   const frames = project?.frames || [];
   const themeId = project?.theme || "";

@@ -31,7 +31,7 @@ const Header = () => {
   const isDark = theme === "dark";
 
   return (
-    <div className="sticky top-0 right-0 left-0 z-30">
+    <div className="top-0 right-0 left-0 fixed z-50">
       <header className="h-16 border-b bg-background py-4">
         <div className="w-full max-w-6xl mx-auto flex items-center justify-between">
           <Logo />
@@ -122,7 +122,9 @@ const Header = () => {
                   <DropdownMenuItem asChild>
                     <LogoutLink className="w-full flex items-center gap-2 px-1 py-2 hover:bg-accent rounded-md transition">
                       <LogOutIcon className="size-4 mr-2 text-primary" />
-                      <span className="font-medium text-foreground">Logout</span>
+                      <span className="font-medium text-foreground">
+                        Logout
+                      </span>
                     </LogoutLink>
                   </DropdownMenuItem>
                 </DropdownMenuContent>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,12 @@ import Logo from "@/components/common/logo";
 const ProjectHeader = ({ projectName }: { projectName?: string }) => {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const isDark = theme === "dark";
 
   return (
@@ -41,22 +47,26 @@ const ProjectHeader = ({ projectName }: { projectName?: string }) => {
           <div className="flex items-center gap-3">
             <Button
               variant="outline"
-              size="icon"
               className="relative rounded-full h-8 w-8"
+              size="icon"
               onClick={() => setTheme(isDark ? "light" : "dark")}
             >
-              <SunIcon
-                className={cn(
-                  "absolute h-5 w-5 transition",
-                  isDark ? "scale-100" : "scale-0"
-                )}
-              />
-              <MoonIcon
-                className={cn(
-                  "absolute h-5 w-5 transition",
-                  isDark ? "scale-0" : "scale-100"
-                )}
-              />
+              {mounted && (
+                <>
+                  <SunIcon
+                    className={cn(
+                      "absolute h-5 w-5 transition",
+                      isDark ? "scale-100" : "scale-0"
+                    )}
+                  />
+                  <MoonIcon
+                    className={cn(
+                      "absolute h-5 w-5 transition",
+                      isDark ? "scale-0" : "scale-100"
+                    )}
+                  />
+                </>
+              )}
             </Button>
           </div>
         </div>

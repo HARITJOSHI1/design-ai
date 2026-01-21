@@ -15,7 +15,7 @@ type Props = {
   className?: string;
   isLoading?: boolean;
   onSubmit?: () => void;
-  hideSubmitBtn?: false;
+  hideSubmitBtn?: boolean;
 };
 
 const AIPromptInput = ({
@@ -27,8 +27,8 @@ const AIPromptInput = ({
   hideSubmitBtn = false,
 }: Props) => {
   return (
-    <div className="bg-background p-2 md:p-0">
-      <InputGroup
+    <div className="bg-background p-2 md:p-0 relative">
+      <InputGroup 
         className={cn(
           "min-h-[172px] rounded-2xl! bg-background outline-none",
           className && className
