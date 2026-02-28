@@ -1,11 +1,12 @@
 "use client";
 
 import { TOOL_MODE_ENUM, ToolMode } from '@/lib/constants/tool-mode';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useCanvas } from '../providers/canvas-provider';
 import { getHTMLWrapper } from '@/lib/functions/getHTMLWrapper';
 import { Rnd } from "react-rnd";
 import { cn } from '@/lib/utils';
+import DeviceFrameToolbar from './device-fram-toolbar';
 
 type Props = {
     html: string;
@@ -17,6 +18,7 @@ type Props = {
     scale?: number;
     toolMode: ToolMode;
     theme_style?: string;
+    onOpenHtmlDialog: () => void;
 }
 
 const DeviceFrame = ({ html,
@@ -28,6 +30,7 @@ const DeviceFrame = ({ html,
     scale = 1,
     toolMode,
     theme_style,
+    onOpenHtmlDialog,
 }: Props) => {
 
     const { selectedFrameId, setSelectedFrameId } = useCanvas();
@@ -36,6 +39,20 @@ const DeviceFrame = ({ html,
         width,
         height: minHeight
     });
+
+
+    // set iframe size dynamically based on ai content (each frames) by receiving message based on defined height of the parent (i.e. 800px)
+
+    useEffect(() => {
+        const handleMessage = (event: MessageEvent) => {
+            if (event.data.type === "FRAME_HEIGHT" && event.data.frameId === frameId) {
+                setFrameSize((prev) => ({ ...prev, height: event.data.height }))
+            }
+        }
+
+        window.addEventListener("message", handleMessage);
+        return () => window.removeEventListener("message", handleMessage);
+    }, [frameId]);
 
     const iframeRef = useRef<HTMLIFrameElement>(null);
     const isSelected = selectedFrameId === frameId;
@@ -54,7 +71,7 @@ const DeviceFrame = ({ html,
             enableResizing={isSelected && toolMode !== TOOL_MODE_ENUM.HAND}
             scale={scale}
             onClick={(e: any) => {
-                e.stopPropogation();
+                // e.stopPropogation();
                 if (toolMode === TOOL_MODE_ENUM.SELECT) setSelectedFrameId(frameId);
             }}
 
@@ -87,7 +104,16 @@ const DeviceFrame = ({ html,
             )}
         >
             <div className="w-full h-full">
-                {/* <DeviceFrameToolbar /> */}
+
+                <DeviceFrameToolbar
+                    title={title}
+                    isSelected={isSelected && toolMode !== TOOL_MODE_ENUM.HAND}
+                    disabled={false}
+                    isDownloading={false}
+                    onDownloadPng={() => { }}
+                    onOpenHTMLDialog={onOpenHtmlDialog}
+                />
+
                 <div
                     className={cn(
                         `relative w-full h-auto

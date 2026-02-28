@@ -2,7 +2,7 @@ import { BASE_VARIABLES, OCEAN_BREEZE_THEME } from "../theme";
 
 
 export function getHTMLWrapper(
-  html: string,
+  html?: string,
   title = "Untitled",
   theme_style?: string,
   frameId?: string
