@@ -1,4 +1,5 @@
 import { generateProjectName } from "@/app/actions/action";
+import { inngest } from "@/inngest/client";
 import prisma from "@/lib/prisma";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { NextResponse } from "next/server";
@@ -6,7 +7,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const session =  getKindeServerSession();
+    const session = getKindeServerSession();
     const user = await session.getUser();
 
     if (!user) throw new Error("Unauthorized");
@@ -52,6 +53,16 @@ export async function POST(req: Request) {
       data: {
         userId,
         name: projectName,
+      },
+    });
+
+    // Trigger inngest event to create a demo screen
+    await inngest.send({
+      name: "ui/generate.screens",
+      data: {
+        prompt,
+        userId: user.id,
+        projectId: project.id,
       },
     });
 
