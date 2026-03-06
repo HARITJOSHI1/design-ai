@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useCanvas } from "../providers/canvas-provider";
+import { useCanvas } from "../../context/canvas-context";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { CameraIcon, ChevronDown, Palette, Save, Wand2 } from "lucide-react";
@@ -58,7 +58,7 @@ const CanvasFloatingToolbar = () => {
                         className={cn(
                           `w-6.5 h-6.5 rounded-full cursor-pointer`,
                           currentTheme?.id === theme.id &&
-                            "ring-1 ring-offset-1"
+                          "ring-1 ring-offset-1"
                         )}
                         style={{
                           background: `linear-gradient(135deg, ${color.primary}, ${color.accent})`,

@@ -2,7 +2,7 @@
 
 import { TOOL_MODE_ENUM, ToolMode } from '@/lib/constants/tool-mode';
 import React, { useEffect, useRef, useState } from 'react'
-import { useCanvas } from '../providers/canvas-provider';
+import { useCanvas } from '../../context/canvas-context';
 import { getHTMLWrapper } from '@/lib/functions/getHTMLWrapper';
 import { Rnd } from "react-rnd";
 import { cn } from '@/lib/utils';

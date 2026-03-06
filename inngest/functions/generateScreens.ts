@@ -12,9 +12,19 @@ import { unsplashTool } from "../tools";
 export const generateScreens = inngest.createFunction(
     { id: "generate-ui-screens" },
     { event: "ui/generate.screens" },
-    async ({ event, step }) => {
+    async ({ event, step, publish }) => {
         const { prompt, userId, projectId, frames, theme: existingTheme } = event.data;
         const isRegeneration = Array.isArray(frames) && frames.length > 0;
+
+        const CHANNEL = `user:${userId}`;
+        await publish({
+            channel: CHANNEL,
+            topic: "generation.start",
+            data: {
+                status: "running",
+                projectId
+            },
+        });
 
         const contextHTML = isRegeneration ? frames
             .slice(0, 4)
@@ -32,6 +42,14 @@ export const generateScreens = inngest.createFunction(
 
         // Analyse or plan
         const analysis = await step.run("analyse-and-plan-screen", async () => {
+            await publish({
+                channel: CHANNEL,
+                topic: "analysis.start",
+                data: {
+                    status: "analyzing",
+                    projectId
+                },
+            });
 
             const { output } = await generateText({
                 model: openRouter.chat("google/gemini-2.5-flash-lite"),
@@ -56,6 +74,18 @@ export const generateScreens = inngest.createFunction(
                     },
                 });
             }
+
+            await publish({
+                channel: CHANNEL,
+                topic: "analysis.complete",
+                data: {
+                    status: "generating",
+                    theme: themetoUse,
+                    totalScreens: output.screens.length,
+                    screens: output.screens,
+                    projectId
+                },
+            });
 
             return { ...output, themetoUse }
         });
@@ -111,8 +141,26 @@ export const generateScreens = inngest.createFunction(
                     },
                 });
 
+                await publish({
+                    channel: CHANNEL,
+                    topic: "frame.created",
+                    data: {
+                        frame,
+                        screenId: screenPlan.id,
+                        projectId
+                    },
+                });
+
                 return { success: true, frame };
             });
         }
+
+        await publish({
+            channel: CHANNEL,
+            topic: "generation.complete",
+            data: {
+                projectId
+            },
+        });
     },
 );

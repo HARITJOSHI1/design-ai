@@ -1,5 +1,5 @@
 import React from "react";
-import { useCanvas } from "../../providers/canvas-provider";
+import { useCanvas } from "../../../context/canvas-context";
 import { ThemeItem } from "./theme-item";
 
 const ThemeSelector = () => {

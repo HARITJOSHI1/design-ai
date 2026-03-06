@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
+    "@inngest/realtime": "^0.4.6",
     "@kinde-oss/kinde-auth-nextjs": "^2.11.0",
     "@openrouter/ai-sdk-provider": "^1.5.4",
     "@prisma/client": "6.19.0",

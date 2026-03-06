@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useCanvas } from "../providers/canvas-provider";
+import { useCanvas } from "../../context/canvas-context";
 import CanvasLoader from "./canvas-loader";
 import { cn } from "@/lib/utils";
 import CanvasFloatingToolbar from "./canvas-floating-toolbar";
@@ -25,7 +25,7 @@ const Canvas = ({ projectId, projectName, isPending }: Props) => {
   const [openHtmlDialog, setOpenHtmlDialog] = useState(false);
   const currentStatus = isPending
     ? "fetching"
-    : loadingStatus !== "idle" && loadingStatus !== "completed"
+    : loadingStatus !== "idle"
       ? loadingStatus
       : null;
 
@@ -88,15 +88,17 @@ const Canvas = ({ projectId, projectName, isPending }: Props) => {
                     height: "100%",
                   }}
                 >
-                  {/* <div>
-                    {[1,].map((frame, idx) => {
+                  <div>
+                    {frames.map((frame, idx) => {
                       const x = 100 + idx * 480;
                       const y = 100
 
-                      // if (frame.isLoading)
-                      //   return <DeviceFrameSkeleton key={idx} style={{
-                      //     transform: `translate(${x}px 100px)`
-                      //   }} />;
+                      if (frame.isLoading)
+                        return (<DeviceFrameSkeleton key={frame.id || idx} style={{
+                          position: "absolute",
+                          left: `${x}px`,
+                          top: `${y}px`,
+                        }} />);
 
                       return <DeviceFrame
                         key={idx}
@@ -108,10 +110,10 @@ const Canvas = ({ projectId, projectName, isPending }: Props) => {
                         toolMode={toolMode}
                         theme_style={theme?.style}
                         onOpenHtmlDialog={handleOpenHtmlDialog}
-                    />
+                      />
                     })}
-                  </div> */}
-                  <DeviceFrame
+                  </div>
+                  {/* <DeviceFrame
                     frameId="demo"
                     title="demo screen"
                     html={DEMO_HTML}
@@ -120,7 +122,7 @@ const Canvas = ({ projectId, projectName, isPending }: Props) => {
                     toolMode={toolMode}
                     theme_style={theme?.style}
                     onOpenHtmlDialog={handleOpenHtmlDialog}
-                  />
+                  /> */}
                 </TransformComponent>
               </div>
 

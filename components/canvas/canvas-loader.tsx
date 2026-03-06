@@ -1,5 +1,5 @@
 import React from "react";
-import { LoadingStatus } from "../providers/canvas-provider";
+import { LoadingStatus } from "../../context/canvas-context";
 import { cn } from "@/lib/utils";
 import { Spinner } from "../ui/spinner";
 
@@ -7,7 +7,7 @@ type Props = {
   status: LoadingStatus | "fetching";
 };
 
-const CanvasLoader = ({status}: Props) => {
+const CanvasLoader = ({ status }: Props) => {
   return (
     <div
       className={cn(

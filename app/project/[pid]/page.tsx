@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import { useGetProjectWithId } from "@/hooks/project/use-project";
 import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
 import ProjectHeader from "./_components/project-header";
-import CanvasProvider from "@/components/providers/canvas-provider";
+import CanvasProvider from "@/context/canvas-context";
 import Canvas from "@/components/canvas/canvas";
 
 const Page = () => {
