@@ -36,7 +36,7 @@ const Canvas = ({ projectId, projectName, isPending }: Props) => {
   return (
     <>
       <div className="relative w-full h-full overflow-hidden">
-        <CanvasFloatingToolbar />
+        <CanvasFloatingToolbar projectId={projectId} />
 
         {currentStatus && <CanvasLoader status={currentStatus} />}
         <TransformWrapper
@@ -110,6 +110,7 @@ const Canvas = ({ projectId, projectName, isPending }: Props) => {
                         toolMode={toolMode}
                         theme_style={theme?.style}
                         onOpenHtmlDialog={handleOpenHtmlDialog}
+                        projectId={projectId}
                       />
                     })}
                   </div>
@@ -136,17 +137,6 @@ const Canvas = ({ projectId, projectName, isPending }: Props) => {
             </>
           )}
         </TransformWrapper>
-
-        {/* <div
-          className={cn(
-            `absolute inset-0 w-full h-full bg-[#eee] dark:bg-[#242423] p-3`
-          )}
-          style={{
-            backgroundImage:
-              "radial-gradient(circle, var(--primary)) 1px, transparent 1px",
-            backgroundSize: "20px 20px",
-          }}
-        ></div> */}
       </div>
 
       <HtmlDialog html={selectedFrame?.htmlContent || DEMO_HTML} theme_style={theme?.style} open={openHtmlDialog} onOpenChange={setOpenHtmlDialog} title={selectedFrame?.title} />

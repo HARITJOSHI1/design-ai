@@ -1,12 +1,14 @@
 "use client";
 
 import { TOOL_MODE_ENUM, ToolMode } from '@/lib/constants/tool-mode';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useCanvas } from '../../context/canvas-context';
 import { getHTMLWrapper } from '@/lib/functions/getHTMLWrapper';
 import { Rnd } from "react-rnd";
 import { cn } from '@/lib/utils';
 import DeviceFrameToolbar from './device-fram-toolbar';
+import axios from 'axios';
+import { toast } from 'sonner';
 
 type Props = {
     html: string;
@@ -19,6 +21,7 @@ type Props = {
     toolMode: ToolMode;
     theme_style?: string;
     onOpenHtmlDialog: () => void;
+    projectId: string;
 }
 
 const DeviceFrame = ({ html,
@@ -31,9 +34,11 @@ const DeviceFrame = ({ html,
     toolMode,
     theme_style,
     onOpenHtmlDialog,
+    projectId,
 }: Props) => {
 
     const { selectedFrameId, setSelectedFrameId } = useCanvas();
+    const [isDownloading, setIsDownloading] = useState(false);
 
     const [frameSize, setFrameSize] = useState({
         width,
@@ -59,6 +64,37 @@ const DeviceFrame = ({ html,
 
     const fullHtml = getHTMLWrapper(html, title, theme_style, frameId);
 
+
+    const handleDownloadPng = useCallback(async () => {
+        if (isDownloading) return;
+        setIsDownloading(true);
+        try {
+            const response = await axios.post("/api/screenshot", {
+                html: fullHtml,
+                width: frameSize.width,
+                height: frameSize.height,
+                projectId,
+            }, {
+                responseType: "blob",
+                validateStatus: (s) => (s >= 200 && s < 300) || s === 304
+            });
+
+            const url = window.URL.createObjectURL(response.data);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `${title.replace(/\s+/g, "-").toLowerCase()}-${Date.now()}.png`;
+            link.click();
+            window.URL.revokeObjectURL(url);
+            toast.success("Screenshot downloaded successfully");
+
+            setIsDownloading(false);
+        }
+        catch (err) {
+            console.log(err);
+            toast.error("Failed to download screenshot");
+            setIsDownloading(false);
+        }
+    }, [frameId, fullHtml, frameSize.width, frameSize.height, isDownloading, title])
 
     return (
         <Rnd
@@ -108,9 +144,9 @@ const DeviceFrame = ({ html,
                 <DeviceFrameToolbar
                     title={title}
                     isSelected={isSelected && toolMode !== TOOL_MODE_ENUM.HAND}
-                    disabled={false}
-                    isDownloading={false}
-                    onDownloadPng={() => { }}
+                    disabled={isDownloading}
+                    isDownloading={isDownloading}
+                    onDownloadPng={handleDownloadPng}
                     onOpenHTMLDialog={onOpenHtmlDialog}
                 />
 

@@ -9,10 +9,26 @@ import { parseThemeColors } from "@/lib/theme";
 import { cn } from "@/lib/utils";
 import ThemeSelector from "./theme/theme-selector";
 import { Separator } from "../ui/separator";
+import { useGenerateDesignById, useUpdateProject } from "@/hooks/project/use-project";
+import { Spinner } from "../ui/spinner";
 
-const CanvasFloatingToolbar = () => {
+const CanvasFloatingToolbar = ({ projectId }: { projectId: string }) => {
   const { themes, theme: currentTheme, setTheme } = useCanvas();
   const [promptText, setPromptText] = useState("");
+
+  const { mutate, isPending } = useGenerateDesignById(projectId);
+
+  const update = useUpdateProject(projectId);
+
+  const handleAiGenerate = () => {
+    if (!promptText) return;
+    mutate(promptText);
+  };
+
+  const handleUpdateTheme = () => {
+    update.mutate(currentTheme?.id!);
+  };
+
   return (
     <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
       <div className="w-full max-w-2xl bg-background dark:bg-gray-950 rounded-full shadow-xl border">
@@ -34,8 +50,8 @@ const CanvasFloatingToolbar = () => {
                 className="min-h-[150px] ring-1! ring-purple-500! rounded-xl! shadow-none border-muted"
                 hideSubmitBtn={true}
               />
-              <Button className="mt-2 w-full bg-linear-to-r from-purple-500 to-indigo-600 text-white rounded-2xl shadow-lg shadow-purple-200/50 cursor-pointer">
-                Design
+              <Button className="mt-2 w-full bg-linear-to-r from-purple-500 to-indigo-600 text-white rounded-2xl shadow-lg shadow-purple-200/50 cursor-pointer" onClick={handleAiGenerate} disabled={isPending}>
+                {isPending ? <Spinner /> : "Design"}
               </Button>
             </PopoverContent>
           </Popover>
@@ -94,8 +110,9 @@ const CanvasFloatingToolbar = () => {
                 variant="default"
                 size="sm"
                 className="rounded-full cursor-pointer"
+                onClick={handleUpdateTheme}
               >
-                <Save className="size-4.5" /> Save
+                {update.isPending ? <Spinner /> : <><Save className="size-4.5" /> Save</>}
               </Button>
             </div>
           </Popover>
