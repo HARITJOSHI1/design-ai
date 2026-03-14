@@ -85,7 +85,7 @@ const Page = () => {
       <TestimonialsSection />
 
       {/* Pricing */}
-      <PricingSection />
+      {/* <PricingSection /> */}
 
       {/* FAQ */}
       <FAQSection />
