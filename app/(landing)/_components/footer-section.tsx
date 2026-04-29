@@ -25,9 +25,8 @@ const footerLinks = {
 };
 
 const socialLinks = [
-  { icon: <Twitter className="size-4" />, href: "#", label: "Twitter" },
-  { icon: <Github className="size-4" />, href: "#", label: "GitHub" },
-  { icon: <Linkedin className="size-4" />, href: "#", label: "LinkedIn" },
+  { icon: <Github className="size-4" />, href: "https://github.com/HARITJOSHI1/design-ai", label: "GitHub" },
+  { icon: <Linkedin className="size-4" />, href: "https://www.linkedin.com/in/harit-joshi/", label: "LinkedIn" },
 ];
 
 const FooterSection = () => {
@@ -77,16 +76,6 @@ const FooterSection = () => {
               </ul>
             </div>
           ))}
-        </div>
-
-        {/* Bottom bar */}
-        <div className="py-6 border-t border-border/40 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} Xdesign.ai. All rights reserved.
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Built with ❤️ and AI
-          </p>
         </div>
       </div>
     </footer>
