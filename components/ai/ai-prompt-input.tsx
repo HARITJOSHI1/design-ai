@@ -45,7 +45,7 @@ const AIPromptInput = ({
 
         <InputGroupAddon
           align="block-end"
-          className="flex items-center justify-end"
+          className="flex items-center justify-end cursor-pointer"
         >
           {!hideSubmitBtn && (
             <InputGroupButton

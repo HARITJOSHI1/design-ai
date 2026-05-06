@@ -12,6 +12,7 @@ import { motion } from "motion/react";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import { Button } from "@/components/ui/button";
+import { SignInButton, useUser } from "@clerk/nextjs";
 
 export const libreBaskerville = Libre_Baskerville({
   subsets: ["latin"],
@@ -19,7 +20,7 @@ export const libreBaskerville = Libre_Baskerville({
 });
 
 const HeroSection = () => {
-  const { user } = useKindeBrowserClient();
+  const { user } = useUser();
   const [promptText, setPromptText] = useState("");
   const { mutate, isPending } = useCreateProject();
 
@@ -77,6 +78,7 @@ const HeroSection = () => {
         </motion.div>
 
         {/* CTA for non-logged-in users */}
+
         {!user && (
           <motion.div
             className="flex items-center gap-4"
@@ -84,19 +86,19 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <LoginLink>
-              <Button size="lg" className="rounded-full px-8 gap-2 text-base font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all">
-                Start Designing Free
+            <SignInButton>
+              <Button size="lg" className="rounded-full px-8 gap-2 text-base font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all cursor-pointer">
+                Start Designing
                 <ArrowRight className="size-4" />
               </Button>
-            </LoginLink>
+            </SignInButton>
             <a href="#how-it-works">
               <Button variant="outline" size="lg" className="rounded-full px-8 text-base">
                 See How It Works
               </Button>
             </a>
-          </motion.div>
-        )}
+          </motion.div>)}
+
 
         {/* Prompt Input for logged-in users */}
         {user && (

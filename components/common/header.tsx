@@ -1,22 +1,13 @@
 "use client";
 
+import { cn } from "@/lib/utils";
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
+import { ArrowRight, MenuIcon, MoonIcon, SunIcon, XIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import React, { useEffect, useState } from "react";
-import Logo from "./logo";
 import { Button } from "../ui/button";
-import { LogOutIcon, MoonIcon, SunIcon, MenuIcon, XIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuItem,
-} from "@radix-ui/react-dropdown-menu";
+import Logo from "./logo";
 
 const navLinks = [
   { label: "Features", href: "#features" },
@@ -26,15 +17,14 @@ const navLinks = [
 ];
 
 const Header = () => {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = React.useState(false);
-  const { user } = useKindeBrowserClient();
+  const { user } = useUser()
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  React.useEffect(() => setMounted(true), []);
+
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,7 +34,7 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isDark = theme === "dark";
+  const isDark = resolvedTheme === "dark";
 
   return (
     <div className="top-0 right-0 left-0 fixed z-100">
@@ -99,73 +89,29 @@ const Header = () => {
             </Button>
 
             {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    className={cn(
-                      "focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow",
-                      "rounded-full p-0.5 hover:ring-2 hover:ring-primary/30"
-                    )}
-                    aria-label="Account menu"
-                  >
-                    <Avatar className="h-8 w-8 transition hover:ring-primary">
-                      <AvatarImage
-                        src={user?.picture || ""}
-                        alt={user?.given_name || ""}
-                        className="object-cover h-8 w-8 rounded-full"
-                      />
-                      <AvatarFallback className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-violet-600 text-primary-foreground font-bold text-xs flex items-center justify-center">
-                        {user?.given_name?.charAt(0)}
-                        {user?.family_name?.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="w-64 rounded-xl shadow-xl border bg-popover px-3 py-2 animate-fade-in"
-                  align="end"
-                >
-                  <div className="flex items-center gap-3 px-2 py-2 border-b mb-2">
-                    <Avatar className="h-10 w-10">
-                      <AvatarImage
-                        src={user?.picture || ""}
-                        alt={user?.given_name || ""}
-                        className="object-cover rounded-full h-10 w-10"
-                      />
-                      <AvatarFallback className="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-violet-600 text-primary-foreground font-bold text-sm flex items-center justify-center">
-                        {user?.given_name?.charAt(0)}
-                        {user?.family_name?.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <div className="font-semibold text-foreground text-sm">
-                        {user?.given_name} {user?.family_name}
-                      </div>
-                      <div className="text-xs text-muted-foreground truncate">
-                        {user?.email}
-                      </div>
-                    </div>
-                  </div>
-                  <DropdownMenuLabel className="text-xs text-muted-foreground mb-1 px-2">
-                    My Account
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <LogoutLink className="w-full flex items-center gap-2 px-2 py-2 hover:bg-accent rounded-lg transition text-sm">
-                      <LogOutIcon className="size-4 text-primary" />
-                      <span className="font-medium text-foreground">
-                        Logout
-                      </span>
-                    </LogoutLink>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <UserButton
+                appearance={{
+                  baseTheme:
+                    mounted && (
+                      resolvedTheme === "dark" ||
+                      resolvedTheme === "system" ||
+                      resolvedTheme === undefined
+                    )
+                      ? dark
+                      : undefined,
+                }}
+              />
             ) : (
-              <LoginLink>
-                <Button size="sm" className="rounded-full px-5 text-sm font-medium">
+              <SignInButton>
+                <Button
+                  size="lg"
+                  className="rounded-full px-4 gap-2 text-sm font-semibold bg-primary text-secondary hover:bg-primary/90 cursor-pointer"
+                >
                   Sign in
+                  <ArrowRight className="size-4" />
                 </Button>
-              </LoginLink>
+              </SignInButton>
+
             )}
 
             {/* Mobile menu button */}

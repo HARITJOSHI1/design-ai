@@ -1,6 +1,6 @@
 import { inngest } from "@/inngest/client";
 import prisma from "@/lib/prisma";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
@@ -8,16 +8,14 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = getKindeServerSession();
-    const user = await session.getUser();
-
-    if (!user) throw new Error("Unauthorized");
+    const user = await auth();
+    if (!user || !user.userId) throw new Error("Unauthorized");
 
     const { id } = await params;
     const project = await prisma.project.findUnique({
       where: {
         id,
-        userId: user.id,
+        userId: user.userId,
       },
       include: {
         frames: true,
@@ -53,13 +51,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const { prompt } = await req.json();
     const { id } = await params;
 
-    const session = getKindeServerSession();
-    const user = await session.getUser();
-
-    if (!user) throw new Error("Unauthorized");
+    const user = await auth();
+    if (!user || !user.userId) throw new Error("Unauthorized");
     if (!prompt) throw new Error("Missing prompt");
 
-    const userId = user.id;
+    const userId = user.userId;
     const project = await prisma.project.findFirst({
       where: {
         id,
@@ -76,7 +72,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
       name: "ui/generate.screens",
       data: {
         prompt,
-        userId: user.id,
+        userId: user.userId,
         projectId: project.id,
         frames: project.frames,
         theme: project.theme,
@@ -104,13 +100,11 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     const { themeId } = await req.json();
     const { id } = await params;
 
-    const session = getKindeServerSession();
-    const user = await session.getUser();
-
-    if (!user) throw new Error("Unauthorized");
+    const user = await auth();
+    if (!user || !user.userId) throw new Error("Unauthorized");
     if (!themeId) throw new Error("Missing theme");
 
-    const userId = user.id;
+    const userId = user.userId;
     const project = await prisma.project.update({
       where: {
         id,

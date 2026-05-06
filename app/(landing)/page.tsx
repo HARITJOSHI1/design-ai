@@ -1,26 +1,24 @@
 "use client";
 
-import React from "react";
 import Header from "@/components/common/header";
-import HeroSection from "./_components/hero-section";
-import StatsSection from "./_components/stats-section";
-import FeaturesSection from "./_components/features-section";
-import HowItWorksSection from "./_components/how-it-works-section";
-import ShowcaseSection from "./_components/showcase-section";
-import TestimonialsSection from "./_components/testimonials-section";
-import PricingSection from "./_components/pricing-section";
-import FAQSection from "./_components/faq-section";
-import CTASection from "./_components/cta-section";
-import FooterSection from "./_components/footer-section";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { Spinner } from "@/components/ui/spinner";
 import { useGetProjects } from "@/hooks/project/use-project";
 import { ProjectType } from "@/lib/types/t.project";
-import ProjectCard from "./_components/project-card";
-import { Spinner } from "@/components/ui/spinner";
+import { useUser } from "@clerk/nextjs";
 import { motion } from "motion/react";
+import CTASection from "./_components/cta-section";
+import FAQSection from "./_components/faq-section";
+import FeaturesSection from "./_components/features-section";
+import FooterSection from "./_components/footer-section";
+import HeroSection from "./_components/hero-section";
+import HowItWorksSection from "./_components/how-it-works-section";
+import ProjectCard from "./_components/project-card";
+import ShowcaseSection from "./_components/showcase-section";
+import StatsSection from "./_components/stats-section";
+import TestimonialsSection from "./_components/testimonials-section";
 
 const Page = () => {
-  const { user } = useKindeBrowserClient();
+  const { user } = useUser();
   const {
     data: projects,
     isLoading,

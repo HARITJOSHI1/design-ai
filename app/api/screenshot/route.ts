@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { Browser } from "puppeteer-core";
 
@@ -46,16 +46,12 @@ export async function POST(request: NextRequest) {
     let browser: Browser;
     try {
 
-        const session = getKindeServerSession();
-        const user = await session.getUser();
+        const user = await auth();
+        if (!user || !user.userId) throw new Error("Unauthorized");
 
-        if (!user) throw new Error("Unauthorized");
 
         const { html, width = 800, height = 600, projectId } = await request.json();
-        console.log(projectId);
-
         const isProd = process.env.NODE_ENV === "production";
-
         const isVercel = process.env.VERCEL;
 
         let puppeteer: any;

@@ -2,17 +2,16 @@
 
 import { inngest } from "@/inngest/client";
 import { getSubscriptionToken } from "@inngest/realtime";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 
 
 export async function fetchRealtimeSubscriptionToken() {
-    const session = getKindeServerSession();
-    const user = await session.getUser();
+    const user = await auth();
+    if (!user || !user.userId) throw new Error("Unauthorized");
 
-    if (!user) throw new Error("Unauthorized");
 
     const token = await getSubscriptionToken(inngest, {
-        channel: `user:${user.id}`,
+        channel: `user:${user.userId}`,
         topics: ["frame.created", "analysis.start", "analysis.complete", "generation.start", "generation.complete"],
     });
 

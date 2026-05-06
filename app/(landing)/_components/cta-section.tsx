@@ -1,16 +1,19 @@
 "use client";
 
-import React from "react";
-import { motion } from "motion/react";
-import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { useRouter } from "next/navigation";
+import { SignInButton, useUser } from "@clerk/nextjs";
+import { ArrowRight, Sparkles } from "lucide-react";
+import { motion } from "motion/react";
+import { useTheme } from "next-themes";
+import React, { useState } from "react";
 
 const CTASection = () => {
-  const { user } = useKindeBrowserClient();
-  const router = useRouter();
+  const { user } = useUser()
+
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  React.useEffect(() => setMounted(true), []);
+
   return (
     <section id="cta" className="py-24 md:py-32 relative overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 relative">
@@ -70,7 +73,7 @@ const CTASection = () => {
                   {user ? (
                     <></>
                   ) : (
-                    <LoginLink>
+                    <SignInButton mode="modal">
                       <Button
                         size="lg"
                         className="rounded-full px-8 gap-2 text-base font-semibold bg-white text-primary hover:bg-white/90 shadow-xl shadow-black/20"
@@ -78,7 +81,8 @@ const CTASection = () => {
                         Start Designing Free
                         <ArrowRight className="size-4" />
                       </Button>
-                    </LoginLink>
+                    </SignInButton>
+
                   )}
                 </div>
 

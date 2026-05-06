@@ -108,12 +108,11 @@ export const generateScreens = inngest.createFunction(
             await step.run(`generate-screen-${i}`, async () => {
 
                 const result = await generateText({
-                    model: openRouter.chat("google/gemini-2.5-flash-lite"),
+                    model: openRouter.chat("google/gemini-2.0-flash-001"),
                     system: GENERATION_SYSTEM_PROMPT,
-                    tools: {
+                    tools: {    
                         searchUnsplash: unsplashTool
                     },
-                    stopWhen: stepCountIs(5),
                     prompt: `
                         - Screen ${i + 1}/${analysis.screens.length}
                         - Screen ID: ${screenPlan.id}
