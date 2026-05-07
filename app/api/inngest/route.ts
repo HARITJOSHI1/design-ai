@@ -13,4 +13,6 @@ export const { GET, POST, PUT } = serve({
         helloWorld,
         generateScreens
     ],
+
+    signingKey: process.env.INNGEST_SIGNING_KEY
 });
