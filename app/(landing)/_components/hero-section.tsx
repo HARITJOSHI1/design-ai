@@ -1,18 +1,16 @@
 "use client";
 
-import AIPromptInput from "@/components/ai/ai-prompt-input";
-import React, { useState } from "react";
-import { Libre_Baskerville } from "next/font/google";
 import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion";
-import { suggestions } from "@/lib/constants/suggestions";
+import AIPromptInput from "@/components/ai/ai-prompt-input";
+import { Button } from "@/components/ui/button";
 import { Spotlight } from "@/components/ui/spotlight-new";
 import { useCreateProject } from "@/hooks/project/use-project";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { motion } from "motion/react";
-import { ArrowRight, Sparkles } from "lucide-react";
-import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import { Button } from "@/components/ui/button";
+import { suggestions } from "@/lib/constants/suggestions";
 import { SignInButton, useUser } from "@clerk/nextjs";
+import { ArrowRight, Sparkles } from "lucide-react";
+import { motion } from "motion/react";
+import { Libre_Baskerville } from "next/font/google";
+import { useState } from "react";
 
 export const libreBaskerville = Libre_Baskerville({
   subsets: ["latin"],
@@ -76,29 +74,6 @@ const HeroSection = () => {
             </p>
           </div>
         </motion.div>
-
-        {/* CTA for non-logged-in users */}
-
-        {!user && (
-          <motion.div
-            className="flex items-center gap-4"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <SignInButton>
-              <Button size="lg" className="rounded-full px-8 gap-2 text-base font-semibold shadow-lg shadow-primary/25 hover:shadow-xl hover:shadow-primary/30 transition-all cursor-pointer">
-                Start Designing
-                <ArrowRight className="size-4" />
-              </Button>
-            </SignInButton>
-            <a href="#how-it-works">
-              <Button variant="outline" size="lg" className="rounded-full px-8 text-base">
-                See How It Works
-              </Button>
-            </a>
-          </motion.div>)}
-
 
         {/* Prompt Input for logged-in users */}
         {user && (
